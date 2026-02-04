@@ -99,22 +99,22 @@ button {
   <button id="no" onmouseover="moveNo()">No 🙃</button>
 </div>
 
-<!-- Invisible Background Music -->
-<audio id="bgMusic" loop>
-  <source src="your-song.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-const music = document.getElementById("bgMusic");
+let music;
+
 const overlay = document.getElementById("tapOverlay");
 
-// Play music after first tap anywhere
+// Play music after first user click
 overlay.addEventListener('click', () => {
+  // Create audio element after click (guaranteed to work)
+  music = new Audio('your-song.mp3');
+  music.loop = true;
+  music.volume = 0.5;
   music.play();
-  overlay.style.display = 'none'; // hide overlay
+
+  overlay.style.display = 'none';
 });
 
 function yesClicked() {
