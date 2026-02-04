@@ -77,8 +77,8 @@ button {
   <button id="no" onmouseover="moveNo()">No 🙃</button>
 </div>
 
-<!-- Background Music -->
-<audio id="bgMusic" autoplay loop>
+<!-- Invisible Background Music -->
+<audio id="bgMusic" autoplay loop muted style="display:none">
   <source src="your-song.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
@@ -86,12 +86,24 @@ button {
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-const music = document.getElementById("bgMusic");
+// Autoplay trick: unmute after page loads with fade-in
+window.addEventListener('load', () => {
+  const music = document.getElementById('bgMusic');
+  music.volume = 0;
+  music.muted = false;
+  music.play();
 
-// Some browsers block autoplay, so play on first click
-document.body.addEventListener('click', () => {
-  if (music.paused) music.play();
-}, { once: true });
+  let vol = 0;
+  const fadeIn = setInterval(() => {
+    vol += 0.01;
+    if(vol >= 0.5) {
+      music.volume = 0.5;
+      clearInterval(fadeIn);
+    } else {
+      music.volume = vol;
+    }
+  }, 50);
+});
 
 function yesClicked() {
   confetti({
@@ -108,8 +120,8 @@ function yesClicked() {
     </div>
   `;
 
-  // Optional: Keep music playing
-  music.play();
+  const music = document.getElementById('bgMusic');
+  if (music) music.play();
 }
 
 function moveNo() {
