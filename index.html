@@ -21,6 +21,7 @@ body {
   align-items: center;
   justify-content: center;
   color: #fff;
+  position: relative;
 }
 
 .card {
@@ -63,10 +64,31 @@ button {
   color: #ff416c;
   position: relative;
 }
+
+/* Tap overlay */
+#tapOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+  text-align: center;
+  padding: 20px;
+}
 </style>
 </head>
 
 <body>
+
+<div id="tapOverlay">💖 Tap anywhere to start the music 💖</div>
 
 <div class="card">
   <h1>Larin 💖</h1>
@@ -78,7 +100,7 @@ button {
 </div>
 
 <!-- Invisible Background Music -->
-<audio id="bgMusic" autoplay loop muted style="display:none">
+<audio id="bgMusic" loop>
   <source src="your-song.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
@@ -86,23 +108,13 @@ button {
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-// Autoplay trick: unmute after page loads with fade-in
-window.addEventListener('load', () => {
-  const music = document.getElementById('bgMusic');
-  music.volume = 0;
-  music.muted = false;
-  music.play();
+const music = document.getElementById("bgMusic");
+const overlay = document.getElementById("tapOverlay");
 
-  let vol = 0;
-  const fadeIn = setInterval(() => {
-    vol += 0.01;
-    if(vol >= 0.5) {
-      music.volume = 0.5;
-      clearInterval(fadeIn);
-    } else {
-      music.volume = vol;
-    }
-  }, 50);
+// Play music after first tap anywhere
+overlay.addEventListener('click', () => {
+  music.play();
+  overlay.style.display = 'none'; // hide overlay
 });
 
 function yesClicked() {
@@ -120,7 +132,7 @@ function yesClicked() {
     </div>
   `;
 
-  const music = document.getElementById('bgMusic');
+  // Keep music playing
   if (music) music.play();
 }
 
